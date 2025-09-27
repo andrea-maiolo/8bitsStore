@@ -1,0 +1,36 @@
+$neon-magenta: #ac17ac;
+$electric-cyan: #00ffff;
+$deep-violet: #190033;
+$neon-green: #00ff00;
+
+$primary: $neon-magenta;
+$secondary: $electric-cyan;
+$success: $neon-green;
+$dark: $deep-violet;
+
+$body-bg: $deep-violet;
+$body-color: #ffffff;
+
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=VT323&display=swap");
+
+body {
+  font-family: "Montserrat", serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "VT323", "Segoe UI", sans-serif;
+}
+
+p,
+a,
+button,
+input {
+  font-family: "Montserrat", serif;
+}
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
