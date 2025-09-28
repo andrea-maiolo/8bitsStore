@@ -9,7 +9,21 @@ const Register = function () {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (email.length == 0 || password.length == 0 || name.length == 0 || surname.length == 0) {
+      e.stopPropagation();
+    }
+
+    const form = {
+      userE: email,
+      userP: password,
+      nameuser: name,
+      surnameuser: surname,
+    };
+
+    console.log(form, "fare fetch");
   };
+
   return (
     <div className="d-flex justify-content-center">
       <Form onSubmit={handleSubmit}>
