@@ -1,18 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./custom.scss";
-import { incrementTest } from "./redux/actions";
+import EntryPage from "./components/EntryPage/EntryPage";
 
 function App() {
-  const cart = useSelector((state) => state.cart.test);
-  const dispatch = useDispatch();
-
   return (
-    <>
-      <div className="card">
-        <button onClick={() => dispatch(incrementTest(1))}>count is {cart}</button>
-      </div>
-      <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<EntryPage />} />
+        hello
+      </Routes>
+    </BrowserRouter>
   );
 }
 
