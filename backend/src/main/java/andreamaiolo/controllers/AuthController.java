@@ -3,6 +3,7 @@ package andreamaiolo.controllers;
 import andreamaiolo.dtos.LoginDto;
 import andreamaiolo.dtos.LoginPayload;
 import andreamaiolo.dtos.RegisterPayload;
+import andreamaiolo.dtos.RegistrationDto;
 import andreamaiolo.entities.User;
 import andreamaiolo.exceptions.ValidationException;
 import andreamaiolo.services.AuthService;
@@ -29,7 +30,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public User registerUser(@RequestBody @Validated RegisterPayload payload, BindingResult validationResults) {
+    public RegistrationDto registerUser(@RequestBody @Validated RegisterPayload payload, BindingResult validationResults) {
         if (validationResults.hasErrors()) {
             validationResults.getFieldErrors().forEach(fieldError -> System.out.println(fieldError.getDefaultMessage()));
             throw new ValidationException(validationResults.getFieldErrors()
@@ -39,7 +40,7 @@ public class AuthController {
             );
         } else {
             User newUser = this.userService.saveUser(payload);
-            return newUser;
+            return new RegistrationDto("all saved jsut log in");
         }
     }
 }

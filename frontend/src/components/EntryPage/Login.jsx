@@ -4,6 +4,30 @@ import { Button, Form, Row } from "react-bootstrap";
 const Login = function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
+
+  const fetchLogin = async function (form) {
+    try {
+      const response = await fetch("http://localhost:3001/auth/login", {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        const r = await response.json();
+        console.log(r);
+        throw new Error("to be defined");
+      }
+
+      const data = response.json();
+      console.log(data);
+      return data;
+    } catch (error) {
+      //errors and loadings can be moved to redux
+      setError(error);
+    }
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -13,12 +37,22 @@ const Login = function () {
     }
 
     const form = {
-      userE: email,
-      userP: password,
+      email: email,
+      password: password,
     };
 
-    console.log(form, "fare fetch");
+    console.log(form);
+
+    fetchLogin(form);
   };
+
+  if (error) {
+    return (
+      <div>
+        <p>sorry there was an error </p>
+      </div>
+    );
+  }
 
   return (
     <div className="d-flex  justify-content-center">
@@ -29,7 +63,7 @@ const Login = function () {
         </Form.Group>
         <Form.Group controlId="passwordInput" className="mb-2">
           <Form.Label className="m-0">Password</Form.Label>
-          <Form.Control required type="text" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Form.Control required type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </Form.Group>
         <Button type="submit" onClick={handleSubmit}>
           Login

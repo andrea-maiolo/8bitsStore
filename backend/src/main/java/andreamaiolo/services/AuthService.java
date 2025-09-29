@@ -6,7 +6,9 @@ import andreamaiolo.exceptions.UnauthorizedException;
 import andreamaiolo.security.JWTTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class AuthService {
     // here you manager the login you need bcrypc the userservice.
     //check for user user bcryp to check password, if all good call jwttol and createtoeken
