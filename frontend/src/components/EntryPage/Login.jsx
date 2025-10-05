@@ -21,7 +21,7 @@ const Login = function () {
       }
 
       const data = await response.json();
-      console.log(data);
+      localStorage.setItem("token", data.token);
       return data;
     } catch (error) {
       //errors and loadings can be moved to redux
