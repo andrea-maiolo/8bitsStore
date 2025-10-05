@@ -1,4 +1,4 @@
-import { ADD_TO_CART, INCREMENT, REMOVE_FROM_CART } from "../actions";
+import { ADD_TO_CART, REMOVE_FROM_CART } from "../actions";
 
 const initialState = {
   createdAt: new Date().toISOString(),
@@ -18,11 +18,6 @@ const cartReducer = function (state = initialState, action) {
       return {
         ...state,
         content: state.content.filter((_, index) => index !== action.payload),
-      };
-    case INCREMENT:
-      return {
-        ...state,
-        test: state.test + action.payload,
       };
     default:
       return state;

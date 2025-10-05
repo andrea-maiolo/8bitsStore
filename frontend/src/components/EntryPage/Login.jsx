@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button, Form, Row } from "react-bootstrap";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../../redux/reducers/authReducer";
 
 const Login = function () {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
 
   const fetchLogin = async function (form) {
     try {
@@ -21,7 +24,8 @@ const Login = function () {
       }
 
       const data = await response.json();
-      localStorage.setItem("token", data.token);
+      console.log(data);
+      dispatch(setCredentials({ token: data.token }));
       return data;
     } catch (error) {
       //errors and loadings can be moved to redux
@@ -40,9 +44,6 @@ const Login = function () {
       email: email,
       password: password,
     };
-
-    console.log(form);
-
     fetchLogin(form);
   };
 
