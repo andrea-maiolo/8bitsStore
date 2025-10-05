@@ -10,15 +10,25 @@ const CategoryManager = function () {
   const [categoriesFromDb, setCategoriesFromDb] = useState(null);
   const token = useSelector((state) => state.auth.token);
   const [show, setShow] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categoryChange, setCategoryChange] = useState("");
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => {
+    setSelectedCategory(null);
+    setShow(false);
+  };
+
+  const handleShow = (category) => {
+    setSelectedCategory(category);
+    setShow(true);
+  };
 
   useEffect(() => {
     getAllCategories();
   }, []);
 
   const getAllCategories = async function () {
+    console.log("running");
     try {
       const res = await fetch("http://localhost:3001/category", {
         headers: {
@@ -86,23 +96,26 @@ const CategoryManager = function () {
     }
   };
 
-  const updateCategory = async function (category) {
+  const updateCategory = async function () {
     try {
-      const response = await fetch(`http://localhost:3001/category/${category.catId}/update`, {
+      console.log(categoryChange);
+      const response = await fetch(`http://localhost:3001/category/${selectedCategory.catId}/update`, {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ name: categoryChange }),
       });
 
       if (!response.ok) {
+        const r = await response;
+        console.log(r);
         throw new Error("error with the creation");
       }
 
       if (response.status == 204) {
         setConfirmation("All done, the category has been deleted");
-        getAllCategories();
       }
     } catch (error) {
       console.log(error);
@@ -119,7 +132,11 @@ const CategoryManager = function () {
     deleteCategory(category);
   };
 
-  const handleUpdateCategory = function (category) {};
+  const handleUpdateCategory = function () {
+    updateCategory();
+    handleClose();
+    getAllCategories();
+  };
 
   return (
     <>
@@ -162,14 +179,21 @@ const CategoryManager = function () {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
+          <Modal.Title>Edit category {selectedCategory ? selectedCategory.name : ""}</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3" controlId="updateCategory">
+              <Form.Label>Change category name</Form.Label>
+              <Form.Control type="text" placeholder="Enter category name" value={categoryChange} onChange={(e) => setCategoryChange(e.target.value)} />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleClose}>
+          <Button variant="primary" onClick={handleUpdateCategory}>
             Save Changes
           </Button>
         </Modal.Footer>
