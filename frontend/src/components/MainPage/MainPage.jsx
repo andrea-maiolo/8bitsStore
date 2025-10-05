@@ -1,5 +1,16 @@
+import CatFilter from "../CatFilter/CatFilter";
+import MyFooter from "../MyFooter/MyFooter";
+import MyNav from "../MyNav/MyNav";
+
 const MainPage = function () {
-  return <h1>hello from main</h1>;
+  return (
+    <>
+      <MyNav />
+      <CatFilter />
+      {/* cards with product */}
+      <MyFooter />
+    </>
+  );
 };
 
 export default MainPage;

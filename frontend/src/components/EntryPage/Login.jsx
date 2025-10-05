@@ -20,7 +20,7 @@ const Login = function () {
         throw new Error("to be defined");
       }
 
-      const data = response.json();
+      const data = await response.json();
       console.log(data);
       return data;
     } catch (error) {
