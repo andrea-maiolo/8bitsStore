@@ -33,7 +33,7 @@ public class CategoryService {
     public List<CategoryDto> findAll() {
         List<Category> categoriesFound = this.categoryRepo.findAll();
         List<CategoryDto> categoryDtoList = categoriesFound.stream()
-                .map(category -> new CategoryDto(category.getName()))
+                .map(category -> new CategoryDto(category.getName(), category.getId()))
                 .collect(Collectors.toList());
         return categoryDtoList;
     }

@@ -1,6 +1,9 @@
 package andreamaiolo.dtos;
 
+import java.util.UUID;
+
 public record CategoryDto(
-        String name
+        String name,
+        UUID catId
 ) {
 }

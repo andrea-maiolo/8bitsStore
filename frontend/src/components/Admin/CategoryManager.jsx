@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
-import { Button, Col, Container, Form, Row } from "react-bootstrap";
+import { Badge, Button, Col, Container, Form, Modal, Row } from "react-bootstrap";
 import { useSelector } from "react-redux";
+import { TiDelete } from "react-icons/ti";
+import { RxUpdate } from "react-icons/rx";
 
 const CategoryManager = function () {
   const [inputCategory, setInputCategory] = useState("");
   const [confirmation, setConfirmation] = useState("");
   const [categoriesFromDb, setCategoriesFromDb] = useState(null);
   const token = useSelector((state) => state.auth.token);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     getAllCategories();
@@ -27,7 +33,6 @@ const CategoryManager = function () {
 
       const data = await res.json();
       setCategoriesFromDb(data);
-      console.log(categoriesFromDb);
     } catch (error) {
       console.log(error);
     }
@@ -51,6 +56,53 @@ const CategoryManager = function () {
 
       if (response.status == 201) {
         setConfirmation("All done, the new category has been added");
+        getAllCategories();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteCategory = async function (category) {
+    try {
+      const response = await fetch(`http://localhost:3001/category/${category.catId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("error with the creation");
+      }
+
+      if (response.status == 204) {
+        setConfirmation("All done, the category has been deleted");
+        getAllCategories();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateCategory = async function (category) {
+    try {
+      const response = await fetch(`http://localhost:3001/category/${category.catId}/update`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("error with the creation");
+      }
+
+      if (response.status == 204) {
+        setConfirmation("All done, the category has been deleted");
+        getAllCategories();
       }
     } catch (error) {
       console.log(error);
@@ -61,6 +113,13 @@ const CategoryManager = function () {
     e.preventDefault();
     createCategory();
   };
+
+  const handleDeleteCategory = function (category) {
+    console.log(category);
+    deleteCategory(category);
+  };
+
+  const handleUpdateCategory = function (category) {};
 
   return (
     <>
@@ -83,14 +142,38 @@ const CategoryManager = function () {
           <Col>{confirmation}</Col>
         </Row>
       </Container>
-
       <Container>
         <Row>
-          {categoriesFromDb.map((cat) => (
-            <Col key={cat.name}>{cat.name}</Col>
-          ))}
+          {categoriesFromDb == null ? (
+            <div>loading</div>
+          ) : (
+            categoriesFromDb.map((cat) => (
+              <Col key={cat.catId} className="mt-2 d-flex align-items-center w-50">
+                <Badge>{cat.name}</Badge>
+                <TiDelete size="1.5em" onClick={() => handleDeleteCategory(cat)} />
+                <RxUpdate onClick={() => handleShow(cat)} />
+              </Col>
+            ))
+          )}
         </Row>
       </Container>
+
+      {/* modal update */}
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Modal heading</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Woohoo, you are reading this text in a modal!</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
